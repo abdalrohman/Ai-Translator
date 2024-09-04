@@ -166,20 +166,16 @@ with st.sidebar:
             value=os.getenv(PROVIDER_MAPPING[provider][0]),
             help="Provide the API key for the selected provider. Skip if already set in the .env file.",
             key="primary_api_key_text_input",
-        )
+        ) or os.getenv(PROVIDER_MAPPING[provider][0])
         base_url = st.text_input(
             "Base URL:",
             value=PROVIDER_MAPPING[provider][2],
             help="Specify the base URL for the API if applicable. Usually required for custom endpoints.",
             key="primary_base_url_text_input",
         )
-        if api_key:
-            os.environ[PROVIDER_MAPPING[provider][0]] = api_key
-        else:
-            api_key = os.getenv(PROVIDER_MAPPING[provider][0])
-
-        if not os.getenv(PROVIDER_MAPPING[provider][0]) and provider not in ["ollama", "huggingface"]:
+        if not api_key:
             st.error(f"API Key not set for provider: {provider}")
+            st.stop()
 
     with st.expander("Fallback Provider (Optional)"):
         enable_fallbacks = st.checkbox("Enable fallbacks", key="enable_fallbacks_checkbox")
@@ -205,20 +201,16 @@ with st.sidebar:
                 value=os.getenv(PROVIDER_MAPPING[fallback_provider][0]),
                 help="Provide the API key for the selected provider. Skip if already set in the .env file.",
                 key="fallback_api_key_text_input",
-            )
+            ) or os.getenv(PROVIDER_MAPPING[fallback_provider][0])
             fallback_base_url = st.text_input(
                 "Base URL:",
                 value=PROVIDER_MAPPING[fallback_provider][2],
                 help="Specify the base URL for the API if applicable. Usually required for custom endpoints.",
                 key="fallback_base_url_text_input",
             )
-            if fallback_api_key:
-                os.environ[PROVIDER_MAPPING[fallback_provider][0]] = fallback_api_key
-            else:
-                fallback_api_key = os.getenv(PROVIDER_MAPPING[fallback_provider][0])
-
-            if not os.getenv(PROVIDER_MAPPING[fallback_provider][0]) and fallback_provider not in ["ollama", "huggingface"]:
+            if not fallback_api_key:
                 st.error(f"API Key not set for provider: {fallback_provider}")
+                st.stop()
 
 
 # initialize chat model with chosen provider
