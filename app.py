@@ -212,6 +212,10 @@ with st.sidebar:
                 st.error(f"API Key not set for provider: {fallback_provider}")
                 st.stop()
 
+    delete_history_btn = st.button("Delete History...")
+    if delete_history_btn and os.path.exists(history_file):
+        st.info(f"Deleting history file: {history_file}")
+        os.remove(history_file)
 
 # initialize chat model with chosen provider
 if provider == "google_genai":
